@@ -1,36 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Skin Detection</title>
-</head>
-<body>
-    <h1>Skin Detection</h1>
-    <video id="webcam" autoplay playsinline width="640" height="480"></video>
-    <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
-    <button id="startButton">Start Skin Detection</button>
-
-    <script>
-        // Get the video element and canvas
-        const webcam = document.getElementById('webcam');
-        const canvas = document.getElementById('canvas');
-        const startButton = document.getElementById('startButton');
-
-        // Check for webcam support
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            startButton.addEventListener('click', function() {
-                // Request access to the camera
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(function(stream) {
-                        // Display the camera feed in the video element
-                        webcam.srcObject = stream;
-                    })
-                    .catch(function(error) {
-                        console.error('Error accessing the camera:', error);
-                    });
-            });
-        } else {
-            console.error('Webcam access not supported in this browser.');
-        }
-    </script>
-</body>
+  <head>
+    <title>Flask OpenCV Skin Detection</title>
+  </head>
+  <body>
+    <h1>OpenCV Skin Detection</h1>
+    <img src="{{ url_for('video_feed') }}" style="max-width: 100%;">
+  </body>
 </html>
