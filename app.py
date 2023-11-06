@@ -4,25 +4,16 @@ import numpy as np
 
 app = Flask(__name__)
 
-def get_camera():
-    # Attempt to open the default camera (camera index 0) or an alternative (camera index 1)
-    camera = cv2.VideoCapture(0)
-    
-    if not camera.isOpened():
-        camera = cv2.VideoCapture(1)
-        
-    if not camera.isOpened():
-        raise Exception("Could not open the camera.")
-    
-    return camera
-
-def detect_skin(camera):
+def detect_skin():
+    # define the upper and lower boundaries of the HSV pixel intensities to be considered 'skin'
     lower = np.array([0, 48, 80], dtype="uint8")
     upper = np.array([20, 255, 255], dtype="uint8")
 
+    camera = cv2.VideoCapture(0)
+
     while True:
-        grabbed, frame = camera.read()
-        
+        (grabbed, frame) = camera.read()
+
         if not grabbed:
             break
 
@@ -43,6 +34,7 @@ def detect_skin(camera):
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
     camera.release()
+    cv2.destroyAllWindows()
 
 @app.route('/')
 def index():
@@ -50,8 +42,7 @@ def index():
 
 @app.route('/video_feed')
 def video_feed():
-    camera = get_camera()
-    return Response(detect_skin(camera), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(detect_skin(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    app.run(debug=True)
